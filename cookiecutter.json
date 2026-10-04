@@ -1,5 +1,5 @@
 {
-    "deployment_name": "fprime_arduino_deployment",
+    "deployment_name": "fprime_atmega128_deployment",
     "deployment_namespace": "{{cookiecutter.deployment_name}}",
     "framing_selection": ["CCSDS", "Fprime"],
     "__include_path_prefix": "",

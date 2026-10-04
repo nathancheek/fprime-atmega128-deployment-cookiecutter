@@ -50,7 +50,8 @@ namespace PingEntries {
     namespace {{cookiecutter.deployment_namespace}}_tlmSend      {enum { WARN = 3, FATAL = 5 };}
     namespace {{cookiecutter.deployment_namespace}}_cmdDisp      {enum { WARN = 3, FATAL = 5 };}
     namespace {{cookiecutter.deployment_namespace}}_eventLogger  {enum { WARN = 3, FATAL = 5 };}
-    namespace {{cookiecutter.deployment_namespace}}_rateGroup1   {enum { WARN = 3, FATAL = 5 };}
+    namespace {{cookiecutter.deployment_namespace}}_rateGroup10Hz {enum { WARN = 3, FATAL = 5 };}
+    namespace {{cookiecutter.deployment_namespace}}_rateGroup1Hz  {enum { WARN = 3, FATAL = 5 };}
 }  // namespace PingEntries
 
 // Definitions are placed within the deployment namespace
@@ -66,7 +67,7 @@ namespace {{cookiecutter.deployment_namespace}} {
      */
     struct TopologyState {
         FwIndexType uartNumber;
-        PlatformIntType uartBaud;
+        U32 uartBaud;  // U32: int is 16-bit on AVR, too small for 115200
     };
 
 }  // namespace {{cookiecutter.deployment_namespace}}

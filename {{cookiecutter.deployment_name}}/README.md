@@ -16,17 +16,25 @@ The next step is to build the {{cookiecutter.deployment_name}} application's cod
 fprime-util build
 ```
 
-## Running the application and F' GDS
+## Flashing the ATmega128
 
-The following command will spin up the F' GDS over UART:
+The board needs [MegaCore](https://github.com/MCUdude/MegaCore) and a bootloader that uploads over UART0 (for example urboot). The deployment assumes a 7.3728 MHz external crystal and 64 KB of external SRAM on the XMEM interface. Upload the hex file with `arduino-cli`, changing the serial port to match your UART0 adapter:
 
 ```sh
-fprime-gds -n --dictionary ./build-artifacts/<build name>/{{cookiecutter.__include_path_prefix | replace('/', '_')}}{{cookiecutter.deployment_name}}/dict/{{cookiecutter.deployment_name}}TopologyDictionary.json{% if cookiecutter.framing_selection == "Fprime" %} --framing-selection fprime{% endif %} --communication-selection uart --uart-device /dev/ttyACM0 --uart-baud 115200
+arduino-cli upload -b "MegaCore:avr:128:clock=7_3728MHz_external" -p /dev/ttyUSB0 -i ./build-artifacts/ATmega128/{{cookiecutter.__include_path_prefix | replace('/', '_')}}{{cookiecutter.deployment_name}}/bin/{{cookiecutter.__include_path_prefix | replace('/', '_')}}{{cookiecutter.deployment_name}}.elf.hex
+```
+
+UART0 is the programming port and carries console output (`Fw::Logger`). Opening it resets the board through DTR. The F' ground link is on UART1.
+
+## Running the application and F' GDS
+
+The following command will spin up the F' GDS on the ground link, UART1:
+
+```sh
+fprime-gds -n --dictionary ./build-artifacts/ATmega128/{{cookiecutter.__include_path_prefix | replace('/', '_')}}{{cookiecutter.deployment_name}}/dict/{{cookiecutter.deployment_name}}TopologyDictionary.json{% if cookiecutter.framing_selection == "Fprime" %} --framing-selection fprime{% endif %} --communication-selection uart --uart-device /dev/ttyACM0 --uart-baud 115200
 ```
 
 > [!NOTE]
-> Change `<build name>` to the build of your deployment (i.e. `teensy41`, `featherM0`, etc.).
->
-> `/dev/ttyACM0` may vary for your system/device. It may also be `/dev/ttyUSB0`. For MacOS, it will be along the lines of `/dev/tty.usbmodem12345`. Change accordingly.
+> `/dev/ttyACM0` should be the serial adapter on UART1. It may vary for your system/device. It may also be `/dev/ttyUSB0`. For MacOS, it will be along the lines of `/dev/tty.usbmodem12345`. Change accordingly.
 >
 > To view the list of your connected devices, run: `ls /dev/tty*`.

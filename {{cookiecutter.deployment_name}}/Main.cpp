@@ -13,6 +13,8 @@
 // Used for logging
 #include <Arduino/Os/Console.hpp>
 
+// Enables the external SRAM interface at startup
+#include <ATmega/ATmegaOs/AVR/XMem.hpp>
 
 /**
  * \brief setup the program
@@ -24,13 +26,13 @@ void setup() {
     // Initialize OSAL
     Os::init();
 
-    // Setup Serial and Logging
+    // Setup console logging on UART0 (the programming port)
     Serial.begin(115200);
     static_cast<Os::Arduino::StreamConsoleHandle*>(Os::Console::getSingleton().getHandle())->setStreamHandler(Serial);
 
     // Object for communicating state to the reference topology
     {{cookiecutter.deployment_namespace}}::TopologyState inputs;
-    inputs.uartNumber = 0;
+    inputs.uartNumber = 1;
     inputs.uartBaud = 115200;
 
     // Setup topology

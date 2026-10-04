@@ -38,7 +38,7 @@ extern "C" {
 // Allow objects to have names. Allocates storage for each instance
 #ifndef FW_OBJECT_NAMES
 #define FW_OBJECT_NAMES \
-    (1)  //!< Indicates whether or not object names are stored (more memory, can be used for tracking objects)
+    (0)  //!< Indicates whether or not object names are stored (more memory, can be used for tracking objects)
 #endif
 
 // To reduce binary size, FW_OPTIONAL_NAME(<string>) can be used to substitute strings with an empty string
@@ -64,24 +64,24 @@ extern "C" {
 // centrally.
 #ifndef FW_OBJECT_REGISTRATION
 #define FW_OBJECT_REGISTRATION \
-    (1)  //!< Indicates whether or not objects can register themselves (more code, more object tracking)
+    (0)  //!< Indicates whether or not objects can register themselves (more code, more object tracking)
 #endif
 
 #ifndef FW_QUEUE_REGISTRATION
-#define FW_QUEUE_REGISTRATION (1)  //!< Indicates whether or not queue registration is used
+#define FW_QUEUE_REGISTRATION (0)  //!< Indicates whether or not queue registration is used
 #endif
 
 // Port Facilities
 
 // This allows tracing calls through ports for debugging
 #ifndef FW_PORT_TRACING
-#define FW_PORT_TRACING (1)  //!< Indicates whether port calls are traced (more code, more visibility into execution)
+#define FW_PORT_TRACING (0)  //!< Indicates whether port calls are traced (more code, more visibility into execution)
 #endif
 
 // This generates code to connect to serialized ports
 #ifndef FW_PORT_SERIALIZATION
 #define FW_PORT_SERIALIZATION \
-    (1)  //!< Indicates whether there is code in ports to serialize the call (more code, but ability to serialize
+    (0)  //!< Indicates whether there is code in ports to serialize the call (more code, but ability to serialize
          //!< calls for multi-note systems)
 #endif
 
@@ -95,7 +95,7 @@ extern "C" {
 //
 // Note: users who want alternate asserts should set assert level to FW_NO_ASSERT and define FW_ASSERT in this header
 #ifndef FW_ASSERT_LEVEL
-#define FW_ASSERT_LEVEL (FW_RELATIVE_PATH_ASSERT)  //!< Defines the type of assert used
+#define FW_ASSERT_LEVEL (FW_FILEID_ASSERT)  //!< Defines the type of assert used
 #endif
 
 // Decide whether the framework should force assertions to always abort.
@@ -103,7 +103,7 @@ extern "C" {
 // If disabled (default), allows the FATAL event handler to decide whether code should continue running after an
 // assertion trips.
 #ifndef FW_ASSERTIONS_ALWAYS_ABORT
-#define FW_ASSERTIONS_ALWAYS_ABORT 0
+#define FW_ASSERTIONS_ALWAYS_ABORT 1
 #endif
 
 // Adjust various configuration parameters in the architecture. Some of the above enables may disable some of the values
@@ -129,13 +129,13 @@ extern "C" {
 // Enables text logging of events as well as data logging. Adds a second logging port for text output.
 // In order to set this to 0, FPRIME_ENABLE_TEXT_LOGGERS must be set to OFF.
 #ifndef FW_ENABLE_TEXT_LOGGING
-#define FW_ENABLE_TEXT_LOGGING (1)  //!< Indicates whether text logging is turned on
+#define FW_ENABLE_TEXT_LOGGING (0)  //!< Indicates whether text logging is turned on
 #endif
 
 // Define if serializables have toString() method. Turning off will save code space and
 // string constants. Must be enabled if text logging enabled
 #ifndef FW_SERIALIZABLE_TO_STRING
-#define FW_SERIALIZABLE_TO_STRING (1)  //!< Indicates if autocoded serializables have toString() methods
+#define FW_SERIALIZABLE_TO_STRING (0)  //!< Indicates if autocoded serializables have toString() methods
 #endif
 
 // Some settings to enable AMPCS compatibility. This breaks regular ISF GUI compatibility

@@ -38,7 +38,7 @@ module ComCcsdsConfig {
     # Aggregator configuration constants
     module Aggregator {
         constant aggregationSize = Svc.Ccsds.TmDataFieldSize
-        constant enablePacketSpanning = false
+        constant enablePacketSpanning = true
     }
 
     # Buffer management constants
