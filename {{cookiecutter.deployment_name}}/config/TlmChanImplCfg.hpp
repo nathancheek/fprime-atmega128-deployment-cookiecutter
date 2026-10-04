@@ -43,19 +43,12 @@
 namespace {
 
 {{"enum {"}}
-{%- if cookiecutter.file_system_type in ["SD_Card", "MicroFS"] %}
-    TLMCHAN_NUM_TLM_HASH_SLOTS = 8,  // !< Number of slots in the hash table.
-{%- else %}
     TLMCHAN_NUM_TLM_HASH_SLOTS = 5,  // !< Number of slots in the hash table.
-{%- endif %}
                                       // Works best when set to about twice the number of components producing telemetry
     TLMCHAN_HASH_MOD_VALUE = 99,      // !< The modulo value of the hashing function.
                                       // Should be set to a little below the ID gaps to spread the entries around
-{% if cookiecutter.file_system_type in ["SD_Card", "MicroFS"] %}
-    TLMCHAN_HASH_BUCKETS = 30,  // !< Buckets assignable to a hash slot.
-{%- else %}
+
     TLMCHAN_HASH_BUCKETS = 22,  // !< Buckets assignable to a hash slot.
-{%- endif %}
                                  // Buckets must be >= number of telemetry channels in system
 
     // Maximum number of updated telemetry entries Run_handler will serialize

@@ -18,9 +18,7 @@ fprime-util build
 
 ## Running the application and F' GDS
 
-The following command will spin up the F' GDS. Examples are available for UART, TcpServer, and TcpClient:
-
-### UART
+The following command will spin up the F' GDS over UART:
 
 ```sh
 fprime-gds -n --dictionary ./build-artifacts/<build name>/{{cookiecutter.__include_path_prefix | replace('/', '_')}}{{cookiecutter.deployment_name}}/dict/{{cookiecutter.deployment_name}}TopologyDictionary.json{% if cookiecutter.framing_selection == "Fprime" %} --framing-selection fprime{% endif %} --communication-selection uart --uart-device /dev/ttyACM0 --uart-baud 115200
@@ -32,23 +30,3 @@ fprime-gds -n --dictionary ./build-artifacts/<build name>/{{cookiecutter.__inclu
 > `/dev/ttyACM0` may vary for your system/device. It may also be `/dev/ttyUSB0`. For MacOS, it will be along the lines of `/dev/tty.usbmodem12345`. Change accordingly.
 >
 > To view the list of your connected devices, run: `ls /dev/tty*`.
-
-### TcpServer
-
-```sh
-fprime-gds -n --dictionary ./build-artifacts/<build name>/{{cookiecutter.__include_path_prefix | replace('/', '_')}}{{cookiecutter.deployment_name}}/dict/{{cookiecutter.deployment_name}}TopologyDictionary.json{% if cookiecutter.framing_selection == "Fprime" %} --framing-selection fprime{% endif %} --ip-client --ip-address <device-ip-address>
-```
-
-> [!NOTE]
-> Change `<build name>` to the build of your deployment (i.e. `teensy41`, `featherM0`, etc.).
->
-> Change `<device-ip-address>` to the IP address of your board. Your machine must be in the same network as the board.
-
-### TcpClient
-
-```sh
-fprime-gds -n --dictionary ./build-artifacts/<build name>/{{cookiecutter.__include_path_prefix | replace('/', '_')}}{{cookiecutter.deployment_name}}/dict/{{cookiecutter.deployment_name}}TopologyDictionary.json{% if cookiecutter.framing_selection == "Fprime" %} --framing-selection fprime{% endif %}
-```
-
-> [!NOTE]
-> Change `<build name>` to the build of your deployment (i.e. `teensy41`, `featherM0`, etc.).

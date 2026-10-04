@@ -43,15 +43,9 @@ module ComCcsdsConfig {
 
     # Buffer management constants
     module BuffMgr {
-        constant frameAccumulatorSize  = 2048     
-{%- if cookiecutter.file_system_type in ["SD_Card", "MicroFS"] %}
-        # File uplink and downlink frames (256-byte GDS chunks, 255-byte downlink packets) need larger buffers
-        constant commsBuffSize         = 512      
-        constant commsFileBuffSize     = 512      
-{%- else %}
+        constant frameAccumulatorSize  = 2048
         constant commsBuffSize         = 140      
-        constant commsFileBuffSize     = 140      
-{%- endif %}
+        constant commsFileBuffSize     = 140
         constant commsBuffCount        = 3        
         constant commsFileBuffCount    = 3       
         constant commsBuffMgrId        = 200      

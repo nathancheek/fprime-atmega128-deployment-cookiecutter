@@ -10,27 +10,9 @@
 
 // Necessary project-specified types
 #include <Arduino/config/FprimeArduino.hpp>
-{%- if cookiecutter.file_system_type == "MicroFS" %}
-// MicroFs
-#include <fprime-baremetal/Os/Baremetal/MicroFs/MicroFs.hpp>
-{%- endif %}
 
 // Allows easy reference to objects in FPP/autocoder required namespaces
 using namespace {{cookiecutter.deployment_namespace}};
-{%- if cookiecutter.file_system_type == "MicroFS" %}
-
-// The MicroFs file system allocates its storage from a malloc-based allocator during the initialization phase.
-Fw::MallocAllocator mallocator;
-{%- endif %}
-{%- if cookiecutter.file_system_type in ["SD_Card", "MicroFS"] %}
-
-// A number of constants are needed for construction of the topology. These are specified here.
-{{"enum TopologyConstants {"}}
-    FILE_DOWNLINK_COOLDOWN = 1000,
-    FILE_DOWNLINK_CYCLE_TIME = 1000,
-    FILE_DOWNLINK_FILE_QUEUE_DEPTH = 10,
-{{"};"}}
-{%- endif %}
 
 // The reference topology divides the incoming clock signal (1Hz) into sub-signals: 1/100Hz, 1/200Hz, and 1/1000Hz
 {{"Svc::RateGroupDriver::DividerSet rateGroupDivisors{{{100, 0}, {200, 0}, {1000, 0}}};"}}
@@ -52,43 +34,6 @@ void configureTopology() {
 
     // Rate groups require context arrays.
     rateGroup1.configure(rateGroup1Context);
-
-{%- if cookiecutter.file_system_type == "MicroFS" %}
-
-    // Initialize the RAM File system
-    Os::Baremetal::MicroFs::MicroFsConfig microFsCfg;
-    Os::Baremetal::MicroFs::MicroFsSetCfgBins(microFsCfg, 5);
-    Os::Baremetal::MicroFs::MicroFsAddBin(microFsCfg, 0, 1 * 1024, 5);
-    Os::Baremetal::MicroFs::MicroFsAddBin(microFsCfg, 1, 10 * 1024, 5);
-    Os::Baremetal::MicroFs::MicroFsAddBin(microFsCfg, 2, 10 * 1024, 5);
-    Os::Baremetal::MicroFs::MicroFsAddBin(microFsCfg, 3, 10 * 1024, 5);
-    Os::Baremetal::MicroFs::MicroFsAddBin(microFsCfg, 4, 10 * 1024, 5);
-    Os::Baremetal::MicroFs::MicroFsInit(microFsCfg, 0, mallocator);
-{%- endif -%}
-
-{%- if cookiecutter.file_system_type in ["SD_Card", "MicroFS"] %}
-
-    // File downlink requires some project-derived properties.
-    fileDownlink.configure(FILE_DOWNLINK_COOLDOWN, FILE_DOWNLINK_CYCLE_TIME, FILE_DOWNLINK_FILE_QUEUE_DEPTH);
-
-    // File access sandboxes. Reads and writes outside them are rejected; "/" is unrestricted.
-    fileUplink.configure("/");
-    fileDownlink.configure("/");
-    fileManager.configure("/");
-    prmDb.configureSandbox("/");
-{%- endif -%}
-
-{%- if cookiecutter.file_system_type == "MicroFS" %}
-
-    // Parameter database is configured with a database file name, and that file must be initially read.
-    prmDb.configure("/bin4/file1");
-    prmDb.readParamFile();
-{%- elif cookiecutter.file_system_type == "SD_Card" %}
-
-    // Parameter database is configured with a database file name, and that file must be initially read.
-    prmDb.configure("prmDb.dat");
-    prmDb.readParamFile();
-{%- endif %}
 }
 
 // Public functions for use in main program are namespaced with deployment namespace {{cookiecutter.deployment_namespace}}
@@ -107,27 +52,12 @@ void setupTopology(const TopologyState& state) {
     // Autocoded command registration. Function provided by autocoder.
     regCommands();
     // Autocoded parameter loading. Function provided by autocoder.
-{%- if cookiecutter.file_system_type in ["SD_Card", "MicroFS"] %}
-    loadParameters();
-{%- else %}
     // DISABLED FOR ARDUINO BOARDS. Loading parameters are not supported because there is typically no file system.
     // loadParameters();
-{%- endif %}
     // Autocoded task kick-off (active components). Function provided by autocoder.
     startTasks(state);
-{% if cookiecutter.com_driver_type == "UART" %}
+
     comDriver.configure(&Serial);
-{%- elif cookiecutter.com_driver_type == "TcpServer" %}
-    Arduino::SocketIpStatus stat = comDriver.configure("SSID", "PASSWORD", 50000);
-    if (stat != Arduino::SocketIpStatus::SOCK_SUCCESS) {
-        Fw::Logger::log("[comDriver] Failed to connect to network\n");
-    }
-{%- elif cookiecutter.com_driver_type == "TcpClient" %}
-    Arduino::SocketIpStatus stat = comDriver.configure("SSID", "PASSWORD", "IP_ADDRESS", 50000);
-    if (stat != Arduino::SocketIpStatus::SOCK_SUCCESS) {
-        Fw::Logger::log("[comDriver] Failed to connect to network\n");
-    }
-{%- endif %}
     
     rateDriver.configure(1);
     rateDriver.start();

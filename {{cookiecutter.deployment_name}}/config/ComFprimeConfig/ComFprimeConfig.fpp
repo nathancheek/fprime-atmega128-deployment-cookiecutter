@@ -33,26 +33,11 @@ module ComFprimeConfig {
 
     # Buffer management constants
     module BuffMgr {
-{%- if cookiecutter.com_driver_type == "UART" and cookiecutter.file_system_type == "None" %}
         constant frameAccumulatorSize  = 256     
         constant commsBuffSize         = 140      
         constant commsFileBuffSize     = 0      
         constant commsBuffCount        = 3      
-        constant commsFileBuffCount    = 0        
-{%- elif cookiecutter.file_system_type in ["SD_Card", "MicroFS"] %}
-        # File uplink and downlink frames (256-byte GDS chunks, 255-byte downlink packets) need larger buffers
-        constant frameAccumulatorSize  = 2048     
-        constant commsBuffSize         = 512      
-        constant commsFileBuffSize     = 512      
-        constant commsBuffCount        = 3      
-        constant commsFileBuffCount    = 3        
-{%- else %}
-        constant frameAccumulatorSize  = 2048     
-        constant commsBuffSize         = 140      
-        constant commsFileBuffSize     = 140      
-        constant commsBuffCount        = 3      
-        constant commsFileBuffCount    = 3        
-{%- endif %}
+        constant commsFileBuffCount    = 0
         constant commsBuffMgrId        = 200      
     }
 }
